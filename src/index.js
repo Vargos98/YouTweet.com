@@ -1,18 +1,27 @@
 // require('dotenv').config(); this was the old way of importing dotenv file
-// new way 
+// new way
 import dotenv from 'dotenv';
 import connectDB from './db/index.js';
-// import mongoose from 'mongoose';
-// import {DB_NAME} from 'constants';
+import { app } from './app.js'; // Ensure app is exported correctly from './app'
 
-// Professional approach to connect to MongoDB.
+// Professional approach to connect to MongoDB
 // Load environment variables
 dotenv.config({
   path: "./.env", // Ensure the correct path to your .env file
 });
 
 // Connect to the database
-connectDB();
+connectDB()
+  .then(() => {
+    // Start the server only after the DB connection is successful
+    app.listen(process.env.PORT || 8000, () => {
+      console.log(`Server is listening on ${process.env.PORT || 8000}`);
+    });
+  })
+  .catch((err) => {
+    console.log("MONGO DB connection failed", err);
+  });
+
 
 // Add more logic here if needed for your server (e.g., starting Express)
 
