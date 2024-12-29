@@ -19,6 +19,8 @@ import {DB_NAME} from 'constants';
 
 
 // THIS IS THE BASIC APPROACH TO CONNECT DB TO THE PROJECT
+// Over here we have used Async await to make sure we have proper error handling for the function
+// This is used when we are using basic methodlogies.
 
 
 // import express from 'express';
