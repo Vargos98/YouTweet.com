@@ -1,8 +1,20 @@
-import mongoose from 'mongoose';
-import {DB_NAME} from 'constants';
+// require('dotenv').config(); this was the old way of importing dotenv file
+// new way 
+import dotenv from 'dotenv';
+import connectDB from './db/index.js';
+// import mongoose from 'mongoose';
+// import {DB_NAME} from 'constants';
 
+// Professional approach to connect to MongoDB.
+// Load environment variables
+dotenv.config({
+  path: "./.env", // Ensure the correct path to your .env file
+});
 
+// Connect to the database
+connectDB();
 
+// Add more logic here if needed for your server (e.g., starting Express)
 
 
 
