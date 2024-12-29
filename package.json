@@ -1,0 +1,19 @@
+{
+  "name": "youtweet.com",
+  "version": "1.0.0",
+  "description": "A fullStack project based on Youtube and Twitter",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "JavaScript",
+    "React",
+    "Node.js",
+    "MongoDB",
+    "Mongoose",
+    "Express.js"
+  ],
+  "author": "Umesh Kumar",
+  "license": "ISC"
+}
