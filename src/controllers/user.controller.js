@@ -14,6 +14,23 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 // Import the ApiResponse utility to structure and format API responses
 import { ApiResponse } from "../utils/ApiResponse.js";
 
+const generateAcessAndRefereshTokens = async (userId) => {
+  try {
+    const user = await User.findById(userId)
+    const accessToken = user.generateAccessToken()
+    const refreshToken = user.generateRefreshToken()
+
+    user.refreshToken = refreshToken
+    await user.save({ validateBeforeSave: false })
+
+    return { accessToken, refreshToken }
+
+
+  } catch (error) {
+    throw new ApiError(500, "Something went wrong while generating Refresh and Acess token")
+
+  }
+}
 // Define the registerUser function wrapped with asyncHandler
 // asyncHandler automatically forwards errors to the middleware for handling
 const registerUser = asyncHandler(async (req, res) => {
@@ -48,7 +65,7 @@ const registerUser = asyncHandler(async (req, res) => {
   // const coverImageLocalPath = req.files?.coverImage[0]?.path;
 
   let coverImageLocalPath
-  if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length >0){
+  if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
     coverImageLocalPath = req.files.coverImage[0].path;
 
   }
@@ -94,6 +111,52 @@ const registerUser = asyncHandler(async (req, res) => {
     new ApiResponse(200, createdUser, "User registered successfully")
   );
 });
+
+const loginUser = asyncHandler(async (req, res,) => {
+  // Steps
+  // req body -> data
+  //username or email to check
+  // find the user
+  // password check
+  // access and refresh token generation
+  // send cookie
+  // res access granted else failed to login
+  const { email, username, password } = req.body
+  if (!username || !email) {
+    throw new ApiError(400, 'Username or email is required');
+  }
+  const user = await User.findOne({
+    $or: [{ email }, { username }]
+  });
+  if (!user) {
+    throw new ApiError(404, 'User does not exist');
+  }
+  const isPasswordValid = await user.isPasswordCorrect(password);
+  if (!isPasswordValid) {
+    throw new ApiError(401, 'Invalid password');
+  }
+  const { accessToken, refreshToken } = await generateAcessAndRefereshTokens(user._id);
+
+  const loggedInUser = await User.findById(user._id).select("-password -refresh-token");
+  const options = {
+    httpOnly: true,
+    secure: true
+  }
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json(
+      new ApiResponse(200,
+        { user: loggedInUser, accessToken, refreshToken},
+        "Logged in successfully"
+      )
+    )
+});
+
+const logoutUser = asyncHandler( async(req, res) => {
+  
+})
 
 // Export the registerUser function so it can be imported and used in other files
 // This is typically used in route definitions to handle the registration endpoint
