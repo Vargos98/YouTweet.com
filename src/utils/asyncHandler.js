@@ -10,11 +10,14 @@ const asyncHandler = (requestHandler) => {
 
 export { asyncHandler }; // Export the asyncHandler for use in other files
 
+
+
+
 // Alternative definitions of asyncHandler for reference:
-// const asyncHandler = ()=>{} 
+// const asyncHandler = ()=>{}
 // A placeholder version of the function with no implementation
 
-// const asyncHandler = (func)=>() => {} 
+// const asyncHandler = (func)=>() => {}
 // A version that takes a function and returns an empty function
 
 // const asyncHandler = (func)=> async()=>{}

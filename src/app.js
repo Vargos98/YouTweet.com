@@ -26,4 +26,18 @@ app.use(express.static("public"));
 // Allows access to cookies as `req.cookies` in route handlers
 app.use(cookieParser()); 
 
+
+// Routes import
+
+import userRouter from "./routes/user.routes.js"
+
+// routes declarations
+app.use("/api/v1/users", userRouter); // Mounting the user router at "/users"
+
+// http:localhost:8000/api/v1/users/register
+
+
+
+
+
 export { app }; // Exporting the `app` instance for use in other modules
