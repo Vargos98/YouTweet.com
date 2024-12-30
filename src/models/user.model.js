@@ -74,6 +74,7 @@ userSchema.methods.isPasswordCorrect = async function (password) {
 
 // Method to generate a JWT access token for the user
 userSchema.methods.generateAccessToken = function () {
+  // return jswt.sing({payload},{AccessToken})
   return jwt.sign(
     {
       _id: this._id, // Include user's ID in the payload
