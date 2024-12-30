@@ -1,30 +1,47 @@
 // Import the Router class from the Express framework
-// This allows us to create modular route handlers for the application
+// This provides a modular way to define route handlers in the application
 import { Router } from "express";
-import {upload} from "../middlewares/multer.middleware.js"
-// Import the registerUser function from the user.controller.js file
-// This function is a controller responsible for handling the user registration logic
-import { registerUser } from "../controllers/user.controller.js";
 
-// Create a new router instance using the Router class
-// This instance will be used to define routes related to user operations
+// Import the upload middleware for handling file uploads
+// This middleware is used to handle multipart/form-data, particularly for file uploads
+import { upload } from "../middlewares/multer.middleware.js";
+
+// Import controller functions for user-related operations
+// These include registerUser, loginUser, and logoutUser
+import { registerUser, loginUser, logoutUser } from "../controllers/user.controller.js";
+
+// Import the verifyJwt middleware to authenticate protected routes
+// This ensures that only authorized users can access certain endpoints
+import { verifyJwt } from "../middlewares/auth.middleware.js";
+
+// Create a new instance of the Express Router
+// This instance will manage user-related routes
 const router = Router();
 
-// Define a route for the "/register" endpoint
-// The .route() method chains HTTP methods (e.g., .post())
-// Here, a POST request to "/register" will trigger the registerUser controller function
+// Define a POST route for the "/register" endpoint
+// This route handles user registration with file uploads for avatar and cover image
 router.route("/register").post(
   upload.fields([
     {
-      name:"avatar",
-      maxCount: 1,
-    },{
-      name:"coverImage",
-      maxCount: 1,
-    }
-  ]),registerUser
+      name: "avatar", // Field name for the avatar file
+      maxCount: 1,    // Limit the number of uploaded files for this field to 1
+    },
+    {
+      name: "coverImage", // Field name for the cover image file
+      maxCount: 1,        // Limit the number of uploaded files for this field to 1
+    },
+  ]),
+  registerUser // Controller function to handle registration logic
 );
 
+// Define a POST route for the "/login" endpoint
+// This route handles user login by invoking the loginUser controller function
+router.route("/login").post(loginUser);
+
+// Define a POST route for the "/logout" endpoint
+// This route is protected with the verifyJwt middleware and handles user logout
+router.route("/logout").post(verifyJwt, logoutUser);
+
 // Export the router instance as the default export of this module
-// This makes it available for use in other parts of the application
+// This allows the router to be used in the main application or other modules
 export default router;
