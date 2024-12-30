@@ -21,7 +21,7 @@ const registerUser = asyncHandler(async (req, res) => {
   const { fullName, email, username, password } = req.body;
 
   // Step 2: Log the email for debugging purposes
-  console.log("email: " + email);
+  // console.log("email: " + email);
 
   // Step 3: Check if any of the fields (fullName, email, username, password) are empty or invalid
   if (
@@ -41,10 +41,17 @@ const registerUser = asyncHandler(async (req, res) => {
   if (existedUser) {
     throw new ApiError(409, 'User already exists');
   }
+  //  console.log(req.files)
 
   // Step 6: Extract file paths for avatar and cover image if they are included in the request
   const avatarLocalPath = req.files?.avatar[0]?.path;
-  const coverImageLocalPath = req.files?.coverImage[0]?.path;
+  // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+
+  let coverImageLocalPath
+  if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length >0){
+    coverImageLocalPath = req.files.coverImage[0].path;
+
+  }
 
   // Step 7: Check if the avatar file is provided; throw an error if it's missing
   if (!avatarLocalPath) {
