@@ -1,14 +1,21 @@
+// Importing the Multer library to handle file uploads
 import multer from "multer";
 
+// Configuring the storage settings for file uploads
 const storage = multer.diskStorage({
-  destination: function(req,file,cb){
-    cb(null,"./public/temp")
+  // Defining the destination folder for uploaded files
+  destination: function(req, file, cb) {
+    // Passing 'null' as the error (no error) and the upload folder path
+    cb(null, "./public/temp");
   },
-  filename: function(req,file,cb){
-    cb(null,file.originalname)
+  // Defining the filename for the uploaded file in the destination folder
+  filename: function(req, file, cb) {
+    // Passing 'null' as the error (no error) and setting the file's original name
+    cb(null, file.originalname);
   }
-})
+});
 
-export const upload = multer({ 
-  storage, 
+// Creating an instance of Multer with the specified storage configuration
+export const upload = multer({
+  storage, // Linking the custom storage settings to Multer
 });
