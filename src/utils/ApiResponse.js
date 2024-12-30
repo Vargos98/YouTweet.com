@@ -8,4 +8,4 @@ class ApiResponse {
   }
 }
 
-export default ApiResponse; // Exporting the class for use in other modules
+export {ApiResponse}; // Exporting the class for use in other modules
