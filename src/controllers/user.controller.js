@@ -14,7 +14,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 // Utility function to generate access and refresh tokens for a user
-const generateAcessAndRefereshTokens = async (userId) => {
+const generateAccessAndRefreshTokens = async (userId) => {
   try {
     // Fetch the user by ID
     const user = await User.findById(userId);
@@ -101,10 +101,12 @@ const registerUser = asyncHandler(async (req, res) => {
 const loginUser = asyncHandler(async (req, res) => {
   // Step 1: Extract login credentials from the request body
   const { email, username, password } = req.body;
+  // console.log(email)
+  // console.log(password)
 
   // Step 2: Check if username or email is provided
-  if (!username || !email) {
-    throw new ApiError(400, 'Username or email is required');
+  if (!username && !email) {
+    throw new ApiError(400, 'Username and email is required');
   }
 
   // Step 3: Find the user in the database by email or username
@@ -120,11 +122,11 @@ const loginUser = asyncHandler(async (req, res) => {
   // Step 5: Validate the provided password
   const isPasswordValid = await user.isPasswordCorrect(password);
   if (!isPasswordValid) {
-    throw new ApiError(401, 'Invalid password');
+    throw new ApiError(401, 'Invalid user credentials.');
   }
 
   // Step 6: Generate access and refresh tokens for the user
-  const { accessToken, refreshToken } = await generateAcessAndRefereshTokens(user._id);
+  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(user._id);
 
   // Step 7: Fetch the logged-in user and exclude sensitive fields
   const loggedInUser = await User.findById(user._id).select("-password -refresh-token");
